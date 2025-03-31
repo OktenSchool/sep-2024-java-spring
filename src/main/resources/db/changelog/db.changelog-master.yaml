@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - changeSet:
+      id: "1.0.0"
+      author: "eokten"
+      changes:
+        - createSequence:
+            sequenceName: "invoices_seq"
+        - createTable:
+            tableName: "invoices"
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: "invoices_pk"
+                  defaultValueSequenceNext: "invoices_seq"
+              - column:
+                  name: "date"
+                  type: "timestamptz"
+              - column:
+                  name: "number"
+                  type: varchar(255)
+              - column:
+                  name: "total_amount"
+                  type: numeric(38,2)
+        - createSequence:
+            sequenceName: "orders_seq"
+        - createTable:
+            tableName: "orders"
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: "orders_pk"
+                  defaultValueSequenceNext: "orders_seq"
+              - column:
+                  name: "order_date"
+                  type: "timestamptz"
+              - column:
+                  name: "order_status"
+                  type: varchar(255)
+              - column:
+                  name: "invoice_id"
+                  type: bigint
+                  constraints:
+                    referencedTableName: "invoices"
+                    referencedColumnNames: "id"
+                    foreignKeyName: "orders_invoice_id_fk"
+        - createSequence:
+            sequenceName: "order_items_seq"
+        - createTable:
+            tableName: "order_items"
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: "order_items_pk"
+                  defaultValueSequenceNext: "order_items_seq"
+              - column:
+                  name: "order_id"
+                  type: bigint
+                  constraints:
+                    referencedTableName: "orders"
+                    referencedColumnNames: "id"
+                    foreignKeyName: "orders_items_order_id_fk"
+              - column:
+                  name: price
+                  type: numeric(38,2)
+              - column:
+                  name: quantity
+                  type: integer
