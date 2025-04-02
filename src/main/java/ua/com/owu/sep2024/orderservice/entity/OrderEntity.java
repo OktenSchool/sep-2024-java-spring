@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.time.Instant;
 import java.util.List;
@@ -43,4 +44,11 @@ public class OrderEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderItemEntity> orderItems;
+
+    public OrderEntity assignOrderItems() {
+        if (CollectionUtils.isNotEmpty(orderItems)) {
+            orderItems.forEach(item -> item.setOrder(this));
+        }
+        return this;
+    }
 }
