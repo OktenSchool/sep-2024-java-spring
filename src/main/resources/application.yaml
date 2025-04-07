@@ -19,8 +19,27 @@ spring:
       WRITE-DATES-AS-TIMESTAMPS: false
   liquibase:
     enabled: true
+  data:
+    mongodb:
+      uri: ${mongodb-uri}
+      database: products-db
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail-user}
+    password: ${mail-pass}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 app:
   info:
     address: Dnipro, Office 10
     phone: 01329129312
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG

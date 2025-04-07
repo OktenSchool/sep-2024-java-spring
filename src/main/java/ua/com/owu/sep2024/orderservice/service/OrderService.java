@@ -3,10 +3,11 @@ package ua.com.owu.sep2024.orderservice.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.owu.sep2024.orderservice.dto.CreateOrderDto;
-import ua.com.owu.sep2024.orderservice.dto.OrderDto;
-import ua.com.owu.sep2024.orderservice.dto.UpdateOrderDto;
+import ua.com.owu.sep2024.orderservice.dto.order.CreateOrderDto;
+import ua.com.owu.sep2024.orderservice.dto.order.OrderDto;
+import ua.com.owu.sep2024.orderservice.dto.order.UpdateOrderDto;
 import ua.com.owu.sep2024.orderservice.entity.OrderEntity;
+import ua.com.owu.sep2024.orderservice.mapper.OrderMapper;
 import ua.com.owu.sep2024.orderservice.repository.OrderRepository;
 
 import java.math.BigDecimal;

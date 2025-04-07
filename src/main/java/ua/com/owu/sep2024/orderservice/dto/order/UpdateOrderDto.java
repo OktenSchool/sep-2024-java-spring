@@ -1,4 +1,4 @@
-package ua.com.owu.sep2024.orderservice.dto;
+package ua.com.owu.sep2024.orderservice.dto.order;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

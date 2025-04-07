@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ua.com.owu.sep2024.orderservice.dto.CreateOrderDto;
-import ua.com.owu.sep2024.orderservice.dto.OrderDto;
-import ua.com.owu.sep2024.orderservice.dto.UpdateOrderDto;
-import ua.com.owu.sep2024.orderservice.entity.OrderEntity;
-import ua.com.owu.sep2024.orderservice.repository.OrderRepository;
+import ua.com.owu.sep2024.orderservice.dto.order.CreateOrderDto;
+import ua.com.owu.sep2024.orderservice.dto.order.OrderDto;
+import ua.com.owu.sep2024.orderservice.dto.order.UpdateOrderDto;
 import ua.com.owu.sep2024.orderservice.service.OrderService;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,14 +1,14 @@
-package ua.com.owu.sep2024.orderservice.service;
+package ua.com.owu.sep2024.orderservice.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import ua.com.owu.sep2024.orderservice.dto.CreateOrderDto;
-import ua.com.owu.sep2024.orderservice.dto.OrderDto;
-import ua.com.owu.sep2024.orderservice.dto.OrderItemDto;
-import ua.com.owu.sep2024.orderservice.dto.UpdateOrderDto;
+import ua.com.owu.sep2024.orderservice.dto.order.CreateOrderDto;
+import ua.com.owu.sep2024.orderservice.dto.order.OrderDto;
+import ua.com.owu.sep2024.orderservice.dto.order.OrderItemDto;
+import ua.com.owu.sep2024.orderservice.dto.order.UpdateOrderDto;
 import ua.com.owu.sep2024.orderservice.entity.OrderEntity;
 import ua.com.owu.sep2024.orderservice.entity.OrderItemEntity;
 
