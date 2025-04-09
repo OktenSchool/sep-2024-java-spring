@@ -74,3 +74,30 @@ databaseChangeLog:
               - column:
                   name: quantity
                   type: integer
+  - changeSet:
+      id: "1.0.1"
+      author: "eokten"
+      changes:
+        - createSequence:
+            sequenceName: "users_seq"
+        - createTable:
+            tableName: "users"
+            columns:
+              - column:
+                  name: "id"
+                  type: "bigint"
+                  constraints:
+                    primaryKey: true
+                    unique: true
+                  defaultValueSequenceNext: "users_seq"
+              - column:
+                  name: "username"
+                  type: "text"
+                  constraints:
+                    unique: true
+              - column:
+                  name: "password"
+                  type: "text"
+              - column:
+                  name: "role"
+                  type: "text"

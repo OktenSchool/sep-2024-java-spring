@@ -2,6 +2,8 @@ package ua.com.owu.sep2024.orderservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,6 +34,7 @@ public class OrderController {
         return orderService.getOrders(minTotalAmount, maxTotalAmount);
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('MANAGER')")
     @PostMapping("/orders")
     public OrderDto createOrder(@Valid @RequestBody CreateOrderDto createOrderDto) {
         return orderService.createOrder(createOrderDto);

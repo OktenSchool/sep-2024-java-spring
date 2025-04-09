@@ -43,3 +43,10 @@ app:
 logging:
   level:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+
+jwt:
+  secret: super-long-HARD-work-to-be-used-for_SECRET_123
+  access-token:
+    ttl-millis: 60000
+  refresh-token:
+    ttl-millis: 60000
