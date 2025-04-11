@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ua.com.owu.sep2024.orderservice.dto.ErrorDto;
+import ua.com.owu.sep2024.orderservice.exception.ShopIsNotAccessibleException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -31,5 +32,15 @@ public class GlobalExceptionHandler {
                         .message("Validation failed")
                         .timestamp(Instant.now())
                         .details(details).build());
+    }
+
+    @ExceptionHandler(ShopIsNotAccessibleException.class)
+    public ResponseEntity<ErrorDto> handleShopIsNotAccessibleException(ShopIsNotAccessibleException e) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ErrorDto.builder()
+                        .message(e.getMessage())
+                        .timestamp(Instant.now())
+                        .details(Map.of()).build());
     }
 }

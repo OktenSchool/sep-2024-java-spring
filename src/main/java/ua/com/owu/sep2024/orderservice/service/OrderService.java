@@ -7,6 +7,7 @@ import ua.com.owu.sep2024.orderservice.dto.CreateOrderDto;
 import ua.com.owu.sep2024.orderservice.dto.OrderDto;
 import ua.com.owu.sep2024.orderservice.dto.UpdateOrderDto;
 import ua.com.owu.sep2024.orderservice.entity.OrderEntity;
+import ua.com.owu.sep2024.orderservice.exception.ShopIsNotAccessibleException;
 import ua.com.owu.sep2024.orderservice.repository.OrderRepository;
 
 import java.math.BigDecimal;
@@ -20,6 +21,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     private final OrderMapper orderMapper;
+
+    private final UserService userService;
 
     public List<OrderDto> getOrders(BigDecimal minTotalAmount, BigDecimal maxTotalAmount) {
         List<OrderEntity> orders;
@@ -40,6 +43,10 @@ public class OrderService {
     }
 
     public OrderDto createOrder(CreateOrderDto createOrderDto) {
+        if (!userService.getAssignedShopIds().contains(createOrderDto.shopId())) {
+            throw new ShopIsNotAccessibleException(createOrderDto.shopId());
+        }
+
         OrderEntity order = orderMapper.createOrder(createOrderDto);
         order.assignOrderItems();
         OrderEntity savedOrder = orderRepository.save(order);

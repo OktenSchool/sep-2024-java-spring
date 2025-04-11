@@ -1,7 +1,9 @@
 package ua.com.owu.sep2024.orderservice.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -50,6 +52,7 @@ public class OrderController {
         return orderService.patchOrder(id, updateOrderDto);
     }
 
+    @RolesAllowed("SHOP_MANAGER") // == @PreAuthorize("hasRole('SHOP_MANAGER')") with @EnableMethodSecurity(jsr250Enabled = true)
     @DeleteMapping("/orders/{id}")
     public void deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);

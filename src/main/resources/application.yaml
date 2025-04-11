@@ -19,6 +19,11 @@ spring:
       WRITE-DATES-AS-TIMESTAMPS: false
   liquibase:
     enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://localhost:9090/realms/owu-ecommerce"
 
 app:
   info:
