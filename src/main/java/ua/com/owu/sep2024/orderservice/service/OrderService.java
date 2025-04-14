@@ -3,9 +3,9 @@ package ua.com.owu.sep2024.orderservice.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.com.owu.sep2024.orderservice.dto.CreateOrderDto;
-import ua.com.owu.sep2024.orderservice.dto.OrderDto;
-import ua.com.owu.sep2024.orderservice.dto.UpdateOrderDto;
+import ua.com.owu.sep2024.orderservice.api.rest.model.CreateOrderDto;
+import ua.com.owu.sep2024.orderservice.api.rest.model.OrderDto;
+import ua.com.owu.sep2024.orderservice.api.rest.model.UpdateOrderDto;
 import ua.com.owu.sep2024.orderservice.entity.OrderEntity;
 import ua.com.owu.sep2024.orderservice.exception.ShopIsNotAccessibleException;
 import ua.com.owu.sep2024.orderservice.repository.OrderRepository;
@@ -43,8 +43,8 @@ public class OrderService {
     }
 
     public OrderDto createOrder(CreateOrderDto createOrderDto) {
-        if (!userService.getAssignedShopIds().contains(createOrderDto.shopId())) {
-            throw new ShopIsNotAccessibleException(createOrderDto.shopId());
+        if (!userService.getAssignedShopIds().contains(createOrderDto.getShopId())) {
+            throw new ShopIsNotAccessibleException(createOrderDto.getShopId());
         }
 
         OrderEntity order = orderMapper.createOrder(createOrderDto);

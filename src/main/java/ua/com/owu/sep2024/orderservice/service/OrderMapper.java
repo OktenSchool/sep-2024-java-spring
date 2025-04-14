@@ -5,14 +5,16 @@ import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import ua.com.owu.sep2024.orderservice.dto.CreateOrderDto;
-import ua.com.owu.sep2024.orderservice.dto.OrderDto;
-import ua.com.owu.sep2024.orderservice.dto.OrderItemDto;
-import ua.com.owu.sep2024.orderservice.dto.UpdateOrderDto;
+import ua.com.owu.sep2024.orderservice.api.rest.model.CreateOrderDto;
+import ua.com.owu.sep2024.orderservice.api.rest.model.OrderDto;
+import ua.com.owu.sep2024.orderservice.api.rest.model.OrderItemDto;
+import ua.com.owu.sep2024.orderservice.api.rest.model.UpdateOrderDto;
 import ua.com.owu.sep2024.orderservice.entity.OrderEntity;
 import ua.com.owu.sep2024.orderservice.entity.OrderItemEntity;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
@@ -40,4 +42,8 @@ public interface OrderMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
     @InheritConfiguration(name = "updateOrderEntity")
     OrderEntity patchOrderEntity(@MappingTarget OrderEntity entity, UpdateOrderDto dto);
+
+    default OffsetDateTime toOffsetDateTime(Instant instant) {
+        return instant != null ? instant.atOffset(ZoneOffset.UTC) : null;
+    }
 }
