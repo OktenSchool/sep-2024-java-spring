@@ -2,7 +2,7 @@ openapi: 3.1.0
 
 info:
   title: OrderService API
-  version: 1.0.0
+  version: 1.1.0
 
 servers:
   - url: http://localhost:8080
@@ -140,15 +140,14 @@ components:
     CreateOrderItem:
       type: object
       properties:
-        price:
-          type: number
-          minimum: 0
+        productId:
+          type: string
         quantity:
           type: integer
           format: int32
           minimum: 1
       required:
-        - price
+        - productId
         - quantity
     UpdateOrder:
       type: object

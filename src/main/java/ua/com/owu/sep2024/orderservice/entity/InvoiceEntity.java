@@ -22,7 +22,6 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "order"})
 @Entity
 @Table(name = "invoices")
 public class InvoiceEntity {

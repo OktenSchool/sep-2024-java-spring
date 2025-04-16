@@ -36,6 +36,9 @@
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <openapi-spec-location>src/main/resources/api/openapi.yaml</openapi-spec-location>
         <api-package>ua.com.owu.sep2024.orderservice.api.rest</api-package>
+
+        <product-service-open-api-spec-location>C:\Users\emyto\IdeaProjects\sep-2024-java-spring-product-service\src\main\resources\api\openapi.yaml</product-service-open-api-spec-location>
+        <product-service.api-package>ua.com.owu.sep2024.orderservice.client.rest</product-service.api-package>
     </properties>
     <dependencies>
         <dependency>
@@ -84,6 +87,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
 
         <dependency>
@@ -181,6 +189,49 @@
                                 <implFolder>/src/main/java</implFolder>
                                 <serializableModel>true</serializableModel>
                                 <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>generate-product-api-client</id>
+
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+
+                        <configuration>
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <inputSpec>${product-service-open-api-spec-location}</inputSpec>
+
+                            <skipIfSpecIsUnchanged>true</skipIfSpecIsUnchanged>
+                            <generateApis>true</generateApis>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModels>true</generateModels>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateModelTests>false</generateModelTests>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                            <output>${project.build.directory}/generated-sources</output>
+                            <modelPackage>${product-service.api-package}.model</modelPackage>
+                            <apiPackage>${product-service.api-package}.api</apiPackage>
+                            <modelNameSuffix>Dto</modelNameSuffix>
+
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <oas3>true</oas3>
+
+                                <sourceFolder>/src/main/java</sourceFolder>
+                                <dateLibrary>java8</dateLibrary>
+                                <useBeanValidation>false</useBeanValidation>
+                                <performBeanValidation>false</performBeanValidation>
+                                <interfaceOnly>false</interfaceOnly>
+                                <useOptional>false</useOptional>
+                                <serializableModel>true</serializableModel>
                             </configOptions>
                         </configuration>
                     </execution>

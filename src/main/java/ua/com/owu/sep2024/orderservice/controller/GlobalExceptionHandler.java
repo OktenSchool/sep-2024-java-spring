@@ -43,4 +43,14 @@ public class GlobalExceptionHandler {
                         .timestamp(Instant.now())
                         .details(Map.of()).build());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorDto> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorDto.builder()
+                        .message(e.getMessage())
+                        .timestamp(Instant.now())
+                        .details(Map.of()).build());
+    }
 }

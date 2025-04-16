@@ -17,6 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -50,5 +51,15 @@ public class OrderEntity {
             orderItems.forEach(item -> item.setOrder(this));
         }
         return this;
+    }
+
+    public BigDecimal getTotal() {
+        if (CollectionUtils.isNotEmpty(orderItems)) {
+            return orderItems.stream()
+                    .map(OrderItemEntity::getTotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        } else {
+            return BigDecimal.ZERO;
+        }
     }
 }

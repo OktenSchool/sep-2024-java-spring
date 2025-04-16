@@ -1,18 +1,28 @@
 package ua.com.owu.sep2024.orderservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.owu.sep2024.orderservice.api.rest.model.CreateOrderDto;
 import ua.com.owu.sep2024.orderservice.api.rest.model.OrderDto;
 import ua.com.owu.sep2024.orderservice.api.rest.model.UpdateOrderDto;
+import ua.com.owu.sep2024.orderservice.client.rest.api.ProductApi;
+import ua.com.owu.sep2024.orderservice.client.rest.model.ProductResponseDto;
+import ua.com.owu.sep2024.orderservice.client.rest.model.SearchProductRequestDto;
 import ua.com.owu.sep2024.orderservice.entity.OrderEntity;
+import ua.com.owu.sep2024.orderservice.entity.OrderItemEntity;
 import ua.com.owu.sep2024.orderservice.exception.ShopIsNotAccessibleException;
 import ua.com.owu.sep2024.orderservice.repository.OrderRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +33,9 @@ public class OrderService {
     private final OrderMapper orderMapper;
 
     private final UserService userService;
+
+    @Qualifier("userAuthProductApi")
+    private final ProductApi productApi;
 
     public List<OrderDto> getOrders(BigDecimal minTotalAmount, BigDecimal maxTotalAmount) {
         List<OrderEntity> orders;
@@ -48,9 +61,37 @@ public class OrderService {
         }
 
         OrderEntity order = orderMapper.createOrder(createOrderDto);
+
+        enrichWithProductInfo(order);
+
         order.assignOrderItems();
         OrderEntity savedOrder = orderRepository.save(order);
         return orderMapper.toOrderDto(savedOrder);
+    }
+
+    private OrderEntity enrichWithProductInfo(OrderEntity order) {
+        if (CollectionUtils.isNotEmpty(order.getOrderItems())) {
+            List<String> productIds = order.getOrderItems().stream()
+                    .map(OrderItemEntity::getProductId)
+                    .toList();
+
+            Map<String, ProductResponseDto> products = productApi
+                    .searchProducts(new SearchProductRequestDto()
+                            .productIds(productIds))
+                    .stream()
+                    .collect(toMap(ProductResponseDto::getId, Function.identity()));
+
+            order.getOrderItems().forEach(item -> {
+                if (!products.containsKey(item.getProductId())) {
+                    throw new IllegalArgumentException("Product '%s' not found".formatted(item.getProductId()));
+                }
+
+                ProductResponseDto product = products.get(item.getProductId());
+                item.setUnitPrice(product.getPrice());
+            });
+        }
+
+        return order;
     }
 
     @Transactional
@@ -58,6 +99,7 @@ public class OrderService {
         return orderRepository.findById(orderId)
                 .map(existingOrder -> orderMapper.updateOrderEntity(existingOrder, updateOrderDto))
                 .map(OrderEntity::assignOrderItems)
+                .map(this::enrichWithProductInfo)
                 .map(orderMapper::toOrderDto);
     }
 
@@ -66,6 +108,7 @@ public class OrderService {
         return orderRepository.findById(orderId)
                 .map(existingOrder -> orderMapper.patchOrderEntity(existingOrder, updateOrderDto))
                 .map(OrderEntity::assignOrderItems)
+                .map(this::enrichWithProductInfo)
                 .map(orderMapper::toOrderDto);
     }
 

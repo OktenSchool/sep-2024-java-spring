@@ -21,11 +21,25 @@ spring:
     enabled: true
   security:
     oauth2:
+      client:
+        provider:
+          keycloak:
+            token-uri: "http://localhost:9090/realms/owu-ecommerce/protocol/openid-connect/token"
+        registration:
+          order-service-client:
+            authorization-grant-type: client_credentials
+            client-id: "order-service-client"
+            client-secret: "mYZahmjIkzXPfwfhliokc7Lf3D9s8Mjt"
+            provider: keycloak
       resourceserver:
         jwt:
           issuer-uri: "http://localhost:9090/realms/owu-ecommerce"
-
 app:
   info:
     address: Dnipro, Office 10
     phone: 01329129312
+  apis:
+    product-service:
+      base-url: "http://localhost:8080/"
+server:
+  port: 8081

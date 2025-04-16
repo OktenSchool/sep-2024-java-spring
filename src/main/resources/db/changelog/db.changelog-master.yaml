@@ -74,3 +74,17 @@ databaseChangeLog:
               - column:
                   name: quantity
                   type: integer
+  - changeSet:
+      id: "1.1.0"
+      author: "eokten"
+      changes:
+        - renameColumn:
+            tableName: "order_items"
+            oldColumnName: "price"
+            newColumnName: "unit_price"
+        - addColumn:
+            tableName: "order_items"
+            columns:
+              - column:
+                  name: "product_id"
+                  type: varchar(24)

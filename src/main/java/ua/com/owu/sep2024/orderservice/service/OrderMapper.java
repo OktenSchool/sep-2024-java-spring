@@ -2,10 +2,12 @@ package ua.com.owu.sep2024.orderservice.service;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InheritConfiguration;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ua.com.owu.sep2024.orderservice.api.rest.model.CreateOrderDto;
+import ua.com.owu.sep2024.orderservice.api.rest.model.CreateOrderItemDto;
 import ua.com.owu.sep2024.orderservice.api.rest.model.OrderDto;
 import ua.com.owu.sep2024.orderservice.api.rest.model.OrderItemDto;
 import ua.com.owu.sep2024.orderservice.api.rest.model.UpdateOrderDto;
@@ -23,10 +25,10 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 public interface OrderMapper {
 
     @Mapping(target = "items", source = "orderItems")
-    @Mapping(target = "totalAmount", source = "invoice.totalAmount")
+    @Mapping(target = "totalAmount", expression = "java(entity.getTotal())")
     OrderDto toOrderDto(OrderEntity entity);
 
-    @Mapping(target = "productPrice", source = "price")
+    @Mapping(target = "productPrice", source = "unitPrice")
     OrderItemDto toOrderItemDto(OrderItemEntity entity);
 
     @Mapping(target = "status", constant = "CREATE")

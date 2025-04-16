@@ -1,6 +1,7 @@
 package ua.com.owu.sep2024.orderservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +23,6 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "order"})
 @Entity
 @Table(name = "order_items")
 public class OrderItemEntity {
@@ -31,7 +31,11 @@ public class OrderItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal price;
+    @Column(name = "product_id")
+    private String productId;
+
+    @Column(name = "unit_price")
+    private BigDecimal unitPrice;
 
     private Integer quantity;
 
@@ -40,4 +44,8 @@ public class OrderItemEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = "order_id")
     private OrderEntity order;
+
+    public BigDecimal getTotal() {
+        return unitPrice.multiply(new BigDecimal(quantity));
+    }
 }
