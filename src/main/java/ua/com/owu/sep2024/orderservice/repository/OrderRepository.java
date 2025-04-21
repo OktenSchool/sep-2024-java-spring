@@ -26,4 +26,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
             WHERE i.totalAmount <= :maximumAmount
             """)
     List<OrderEntity> findAllByInvoiceTotalAmountLessThanEqual(BigDecimal maximumAmount);
+
+    List<OrderEntity> findAllByOrderItemsProductId(String productId);
 }

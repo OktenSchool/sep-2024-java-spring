@@ -34,7 +34,7 @@ public class OrderService {
 
     private final UserService userService;
 
-    @Qualifier("userAuthProductApi")
+    @Qualifier("serviceAuthProductApi")
     private final ProductApi productApi;
 
     public List<OrderDto> getOrders(BigDecimal minTotalAmount, BigDecimal maxTotalAmount) {
@@ -112,7 +112,16 @@ public class OrderService {
                 .map(orderMapper::toOrderDto);
     }
 
+    @Transactional
+    public void updateOrderStatus(Long orderId, String newStatus) {
+        orderRepository.findById(orderId).ifPresent(order -> order.setStatus(newStatus));
+    }
+
     public void deleteOrder(Long orderId) {
         orderRepository.deleteById(orderId);
+    }
+
+    public List<OrderEntity> getOrdersByProductId(String productId) {
+        return orderRepository.findAllByOrderItemsProductId(productId);
     }
 }
