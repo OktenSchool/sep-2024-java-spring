@@ -37,9 +37,29 @@
         <openapi-spec-location>src/main/resources/api/openapi.yaml</openapi-spec-location>
         <api-package>ua.com.owu.sep2024.orderservice.api.rest</api-package>
 
-        <product-service-open-api-spec-location>C:\Users\emyto\IdeaProjects\sep-2024-java-spring-product-service\src\main\resources\api\openapi.yaml</product-service-open-api-spec-location>
+        <product-service-open-api-spec-location>
+            C:\Users\emyto\IdeaProjects\sep-2024-java-spring-product-service\src\main\resources\api\openapi.yaml
+        </product-service-open-api-spec-location>
         <product-service.api-package>ua.com.owu.sep2024.orderservice.client.rest</product-service.api-package>
+
+<!--        <zenwave.version>1.4.1</zenwave.version>-->
+        <zenwave.version>1.7.1</zenwave.version>
+        <event-api-package>ua.com.owu.sep2024.orderservice.api.event</event-api-package>
+        <asyncapi-spec-file>C:\Users\emyto\IdeaProjects\sep-2024-java-spring-product-service\src\main\resources\api\asyncapi.yaml</asyncapi-spec-file>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2024.0.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -85,8 +105,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-binder-kafka</artifactId>
         </dependency>
 
         <dependency>
@@ -241,6 +266,70 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>io.github.zenwave360.zenwave-sdk</groupId>
+                <artifactId>zenwave-sdk-maven-plugin</artifactId>
+                <version>${zenwave.version}</version>
+                <configuration>
+                    <addCompileSourceRoot>true</addCompileSourceRoot>
+                    <addTestCompileSourceRoot>true</addTestCompileSourceRoot>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-asyncapi-dtos</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>jsonschema2pojo</generatorName>
+                            <inputSpec>${asyncapi-spec-file}</inputSpec>
+                            <configOptions>
+                                <modelPackage>${event-api-package}.model</modelPackage>
+                                <jsonschema2pojo.useJakartaValidation>true</jsonschema2pojo.useJakartaValidation>
+                                <jsonschema2pojo.includeJsr303Annotations>false
+                                </jsonschema2pojo.includeJsr303Annotations>
+
+                                <jsonschema2pojo.formatTypeMapping>int64=java.lang.Long
+                                </jsonschema2pojo.formatTypeMapping>
+                                <!--OR-->
+                                <!--<jsonschema2pojo.useLongIntegers>true</jsonschema2pojo.useLongIntegers>-->
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-asyncapi-producer</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>spring-cloud-streams3</generatorName>
+                            <inputSpec>${asyncapi-spec-file}</inputSpec>
+                            <configOptions>
+                                <operationIds>onProductDeletedEvent</operationIds>
+                                <role>client</role>
+                                <style>imperative</style>
+                                <apiPackage>${event-api-package}.consumer</apiPackage>
+                                <modelPackage>${event-api-package}.model</modelPackage>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.github.zenwave360.zenwave-sdk.plugins</groupId>
+                        <artifactId>asyncapi-spring-cloud-streams3</artifactId>
+                        <version>${zenwave.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.github.zenwave360.zenwave-sdk.plugins</groupId>
+                        <artifactId>asyncapi-jsonschema2pojo</artifactId>
+                        <version>${zenwave.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

@@ -34,15 +34,18 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: "http://localhost:9090/realms/owu-ecommerce"
-  kafka:
-    consumer:
-      bootstrap-servers: localhost:9092
-      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-topics:
-  product-deleted: product-deleted-events
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      function:
+        definition: on-product-deleted-event
+      bindings:
+        on-product-deleted-event-in-0:
+          destination: owu.ecommerce.product.event.v1.product-deleted-events
+          group: order-service
+      default-binder: kafka
 app:
   info:
     address: Dnipro, Office 10
