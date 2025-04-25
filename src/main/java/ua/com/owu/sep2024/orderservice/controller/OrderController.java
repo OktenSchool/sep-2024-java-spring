@@ -3,6 +3,7 @@ package ua.com.owu.sep2024.orderservice.controller;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import ua.com.owu.sep2024.orderservice.api.rest.controller.OrderApi;
 import ua.com.owu.sep2024.orderservice.api.rest.model.CreateOrderDto;
@@ -20,6 +21,7 @@ public class OrderController implements OrderApi {
     private final OrderService orderService;
 
     @RolesAllowed("SHOP_MANAGER")
+    @PreAuthorize("hasRole('SHOP_MANAGER')")
     @Override
     public ResponseEntity<OrderDto> createOrder(CreateOrderDto createOrderDto) {
         return ResponseEntity.ok(orderService.createOrder(createOrderDto));
